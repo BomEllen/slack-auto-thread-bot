@@ -5,7 +5,7 @@ import os
 
 # 슬랙 봇 토큰과 채널명
 SLACK_TOKEN = os.environ["SLACK_TOKEN"]
-CHANNEL = "#일반"  # 실제 채널 이름이나 ID 입력
+CHANNEL = "C04TS7Y82M9"  # 실제 채널 이름이나 ID 입력
 
 client = WebClient(token=SLACK_TOKEN)
 scheduler = BlockingScheduler()
