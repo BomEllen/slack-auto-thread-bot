@@ -5,7 +5,7 @@ from slack_sdk import WebClient
 
 # 환경변수에서 토큰과 채널 설정
 SLACK_TOKEN = os.environ["SLACK_TOKEN"]
-CHANNEL = "C01ABCDEFG"  # ⚠️ 실제 슬랙 채널 ID로 변경하세요!
+CHANNEL = "#일반"  # ⚠️ 실제 슬랙 채널 ID로 변경하세요!
 
 # thread_ts 불러오기
 with open("thread_ts.txt", "r") as f:
