@@ -2,7 +2,7 @@ name: Run Slack Class Bot
 
 on:
   schedule:
-    - cron: '49 23 * * *'  # 매일 오전 8:50 KST = UTC 23:49
+    - cron: '49 23 * * *'  # KST 08:50 (UTC 23:49)
   workflow_dispatch:
 
 jobs:
@@ -10,18 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: pip install slack_sdk apscheduler
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Run bot
-      run: python slack_class_bot.py
-      env:
-        SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+      - name: Run Slack bot script
+        run: python slack_class_bot.py
+        env:
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
