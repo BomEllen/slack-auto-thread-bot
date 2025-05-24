@@ -1,0 +1,34 @@
+name: Post Slack Reminder
+
+on:
+  schedule:
+    # 한국 시간 기준 → UTC 변환
+    - cron: '50 0 * * *'   # 09:50 KST
+    - cron: '50 1 * * *'   # 10:50
+    - cron: '50 2 * * *'   # 11:50
+    - cron: '50 3 * * *'   # 12:50
+    - cron: '50 5 * * *'   # 14:50
+    - cron: '50 6 * * *'   # 15:50
+    - cron: '50 7 * * *'   # 16:50
+  workflow_dispatch:
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Post message to thread
+        run: python post_to_thread.py
+        env:
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
