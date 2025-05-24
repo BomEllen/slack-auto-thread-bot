@@ -25,3 +25,12 @@ jobs:
         run: python slack_class_bot.py
         env:
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          
+      - name: Commit thread_ts to repo
+        run: |
+          git config --global user.name "auto-bot"
+          git config --global user.email "bot@example.com"
+          git add thread_ts.txt
+          git commit -m "Update thread_ts for today" || echo "Nothing to commit"
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git HEAD:main
+
