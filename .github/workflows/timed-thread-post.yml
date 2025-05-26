@@ -2,14 +2,13 @@ name: Post Slack Reminder
 
 on:
   schedule:
-    # 한국 시간 기준 → UTC 기준 cron 변환
-    - cron: '50 0 * * *'   # 09:50 KST
-    - cron: '50 1 * * *'   # 10:50
-    - cron: '50 2 * * *'   # 11:50
-    - cron: '50 3 * * *'   # 12:50
-    - cron: '50 5 * * *'   # 14:50
-    - cron: '50 6 * * *'   # 15:50
-    - cron: '50 7 * * *'   # 16:50
+    - cron: '50 0 * * 1-5'   # 09:50 KST
+    - cron: '50 1 * * 1-5'   # 10:50
+    - cron: '50 2 * * 1-5'   # 11:50
+    - cron: '50 3 * * 1-5'   # 12:50
+    - cron: '50 5 * * 1-5'   # 14:50
+    - cron: '50 6 * * 1-5'   # 15:50
+    - cron: '50 7 * * 1-5'   # 16:50
   workflow_dispatch:
 
 jobs:
@@ -30,12 +29,12 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Post message to thread
-        run: python post_to_thread.py
+      - name: Post reminder message
+        run: python timed_reminder_bot.py
         env:
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
 
-      - name: Commit thread_ts to repo
+      - name: Commit updated thread_ts.txt
         run: |
           git config --global user.name "auto-bot"
           git config --global user.email "bot@example.com"
