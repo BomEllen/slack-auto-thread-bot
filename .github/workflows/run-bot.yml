@@ -1,8 +1,8 @@
-name: Run Slack Thread + Comment
+name: Run Slack Class Bot
 
 on:
   schedule:
-    - cron: '49 23 * * *'  # 매일 KST 08:50 (UTC 기준 23:49)
+    - cron: '49 23 * * 1-5'  # 매일 08:50 KST → UTC 기준 23:49
   workflow_dispatch:
 
 jobs:
@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code using PAT
+      - name: Checkout code with PAT
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GH_PAT }}  # PUSH 권한이 있는 PAT 사용
+          token: ${{ secrets.GH_PAT }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -23,21 +23,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Step 1 - Send initial thread message
+      - name: Run Slack bot script
         run: python slack_class_bot.py
         env:
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
 
-      - name: Step 2 - Post reply to the thread
-        run: python post_to_thread.py
-        env:
-          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
-
-      - name: Step 3 - Commit thread_ts.txt back to repo
+      - name: Commit thread_ts to repo
         run: |
           git config --global user.name "auto-bot"
           git config --global user.email "bot@example.com"
           git add thread_ts.txt
           git commit -m "Update thread_ts for today" || echo "No changes to commit"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}
-          git push origin HEAD:main
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} HEAD:main
