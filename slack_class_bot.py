@@ -1,20 +1,16 @@
-# slack_class_bot.py
-
 from slack_sdk import WebClient
 import os
 
 SLACK_TOKEN = os.environ["SLACK_TOKEN"]
-CHANNEL = "#일반"  # 슬랙 채널 ID
+CHANNEL = "#일반"  # ✅ 실제 슬랙 채널 ID로 교체
 
 client = WebClient(token=SLACK_TOKEN)
 
-# 슬랙에 스레드 시작 메시지 전송
 response = client.chat_postMessage(
     channel=CHANNEL,
     text="📚 *오늘의 수업 쓰레드 시작!*"
 )
 
-# 받은 thread_ts 값을 파일로 저장
 thread_ts = response["ts"]
 with open("thread_ts.txt", "w") as f:
     f.write(thread_ts)
