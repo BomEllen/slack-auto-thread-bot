@@ -2,7 +2,7 @@ from slack_sdk import WebClient
 import os
 
 SLACK_TOKEN = os.environ["SLACK_TOKEN"]
-CHANNEL = "#일반"  # ✅ 실제 슬랙 채널 ID로 교체
+CHANNEL = "C04TS7Y82M9"  # ✅ 실제 슬랙 채널 ID로 교체
 
 client = WebClient(token=SLACK_TOKEN)
 
