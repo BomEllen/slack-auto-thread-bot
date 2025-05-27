@@ -2,7 +2,7 @@ name: Slack Class Bot (Combined)
 
 on:
   schedule:
-    - cron: '49 23 * * 1-5'   # 08:50 KST → 스레드 시작
+    - cron: '49 23 * * 1-5'   # 08:50 KST (스레드 시작)
     - cron: '50 0 * * 1-5'    # 09:50
     - cron: '50 1 * * 1-5'    # 10:50
     - cron: '50 2 * * 1-5'    # 11:50
@@ -10,7 +10,7 @@ on:
     - cron: '50 5 * * 1-5'    # 14:50
     - cron: '50 6 * * 1-5'    # 15:50
     - cron: '50 7 * * 1-5'    # 16:50
-  workflow_dispatch:  # 수동 실행 가능
+  workflow_dispatch:  # 수동 실행도 가능
 
 jobs:
   slack-bot:
@@ -34,16 +34,16 @@ jobs:
         id: time
         run: echo "now=$(date -u +"%H:%M")" >> $GITHUB_OUTPUT
 
-      - name: Run slack_class_bot.py at 23:49 UTC (08:50 KST)
-        if: steps.time.outputs.now == '23:49'
+      - name: Run slack_class_bot.py at 23:49 UTC or manually
+        if: steps.time.outputs.now == '23:49' || github.event_name == 'workflow_dispatch'
         run: |
-          echo "⏰ 실행 시각은 08:50 KST입니다 (UTC 23:49)"
+          echo "📚 오늘의 수업 쓰레드 시작!"
           python slack_class_bot.py
         env:
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
 
       - name: Commit thread_ts.txt
-        if: steps.time.outputs.now == '23:49'
+        if: steps.time.outputs.now == '23:49' || github.event_name == 'workflow_dispatch'
         run: |
           git config --global user.name "auto-bot"
           git config --global user.email "bot@example.com"
@@ -51,10 +51,10 @@ jobs:
           git commit -m "Update thread_ts for today" || echo "No changes"
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} HEAD:main
 
-      - name: Run timed_reminder_bot.py at other times
+      - name: Run timed_reminder_bot.py at scheduled comment times only
         if: steps.time.outputs.now != '23:49'
         run: |
-          echo "💬 댓글 전송 실행"
+          echo "💬 쉬는시간 댓글 전송 실행"
           python timed_reminder_bot.py
         env:
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
