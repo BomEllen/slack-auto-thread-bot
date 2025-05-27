@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 # 🔐 슬랙 토큰과 채널 설정
 SLACK_TOKEN = os.environ["SLACK_TOKEN"]
-CHANNEL = "#일반"  # ✅ 실제 슬랙 채널 ID로 바꾸세요
+CHANNEL = "C04TS7Y82M9"  # ✅ 실제 슬랙 채널 ID로 바꾸세요
 
 # 📁 thread_ts.txt 읽기
 try:
@@ -28,7 +28,6 @@ message_map = {
     "14:50": "쉬는 시간 입니다!!",
     "15:50": "쉬는 시간 입니다!!",
     "16:50": "쉬는 시간 입니다!!",
-    "15:45": "쉬는 시간 입니다!!",
 }
 
 # ✅ 해당 시간에 맞는 메시지가 있다면 댓글 전송
