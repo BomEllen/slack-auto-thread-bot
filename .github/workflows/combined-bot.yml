@@ -2,15 +2,18 @@ name: Slack Class Bot (Combined)
 
 on:
   schedule:
-    - cron: '49 23 * * 1-5'   # 08:50 KST (스레드 시작)
-    - cron: '50 0 * * 1-5'    # 09:50
+    - cron: '47 23 * * 1-5'   # 08:47 KST (조금 여유 있게 실행 예약)
+    - cron: '48 23 * * 1-5'
+    - cron: '49 23 * * 1-5'
+    - cron: '50 23 * * 1-5'
+    - cron: '50 0 * * 1-5'    # 09:50 댓글
     - cron: '50 1 * * 1-5'    # 10:50
     - cron: '50 2 * * 1-5'    # 11:50
     - cron: '50 3 * * 1-5'    # 12:50
     - cron: '50 5 * * 1-5'    # 14:50
     - cron: '50 6 * * 1-5'    # 15:50
     - cron: '50 7 * * 1-5'    # 16:50
-  workflow_dispatch:  # 수동 실행도 가능
+  workflow_dispatch:
 
 jobs:
   slack-bot:
@@ -34,8 +37,8 @@ jobs:
         id: time
         run: echo "now=$(date -u +"%H:%M")" >> $GITHUB_OUTPUT
 
-      - name: Run slack_class_bot.py at 23:49 UTC or manually
-        if: steps.time.outputs.now == '23:49' || github.event_name == 'workflow_dispatch'
+      - name: Run slack_class_bot.py between 23:47 and 23:50 UTC or manually
+        if: contains(fromJSON('["23:47","23:48","23:49","23:50"]'), steps.time.outputs.now) || github.event_name == 'workflow_dispatch'
         run: |
           echo "📚 오늘의 수업 쓰레드 시작!"
           python slack_class_bot.py
@@ -43,7 +46,7 @@ jobs:
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
 
       - name: Commit thread_ts.txt
-        if: steps.time.outputs.now == '23:49' || github.event_name == 'workflow_dispatch'
+        if: contains(fromJSON('["23:47","23:48","23:49","23:50"]'), steps.time.outputs.now) || github.event_name == 'workflow_dispatch'
         run: |
           git config --global user.name "auto-bot"
           git config --global user.email "bot@example.com"
@@ -52,7 +55,7 @@ jobs:
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} HEAD:main
 
       - name: Run timed_reminder_bot.py at scheduled comment times only
-        if: steps.time.outputs.now != '23:49'
+        if: steps.time.outputs.now != '23:47' && steps.time.outputs.now != '23:48' && steps.time.outputs.now != '23:49' && steps.time.outputs.now != '23:50'
         run: |
           echo "💬 쉬는시간 댓글 전송 실행"
           python timed_reminder_bot.py
